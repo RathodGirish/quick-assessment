@@ -1,6 +1,8 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
 
 // components
 import PageTitle from "../../components/PageTitle";
@@ -42,6 +44,14 @@ export default function Tables() {
             columns={["Name", "Company", "City", "State"]}
             options={{
               filterType: "checkbox",
+              // pagination:false,
+              customToolbar: () => {
+                return (  
+                  <IconButton>
+                  <AddIcon />
+                </IconButton>
+                );
+              }
             }}
           />
         </Grid>

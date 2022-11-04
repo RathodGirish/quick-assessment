@@ -30,7 +30,7 @@ const Widget = ({
             <Typography variant="h5" color="textSecondary">
               {title}
             </Typography>
-            {!disableWidgetMenu && (
+            {/* {!disableWidgetMenu && (
               <IconButton
                 color="primary"
                 classes={{ root: classes.moreButton }}
@@ -41,7 +41,7 @@ const Widget = ({
               >
                 <MoreIcon />
               </IconButton>
-            )}
+            )} */}
           </React.Fragment>
         )}
       </div>
@@ -61,7 +61,7 @@ const Widget = ({
       onClose={() => props.setMoreMenuOpen(false)}
       disableAutoFocusItem
     >
-      <MenuItem>
+      {/* <MenuItem>
         <Typography>Edit</Typography>
       </MenuItem>
       <MenuItem>
@@ -72,7 +72,7 @@ const Widget = ({
       </MenuItem>
       <MenuItem>
         <Typography>Print</Typography>
-      </MenuItem>
+      </MenuItem> */}
     </Menu>
   </div>
 );

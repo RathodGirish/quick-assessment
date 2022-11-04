@@ -39,8 +39,6 @@ Topic: update Feedback ById
 */
 
 exports.updateFeedbackById = (req, res) => {
-    console.log(req.body)
-    console.log(req.params)
     const examId = req.body.examId;
     const feedback = req.body.feedback;
     const review = req.body.review;
@@ -52,7 +50,7 @@ exports.updateFeedbackById = (req, res) => {
             message: CONSTANT.COLLECTION.FEEDBACK + CONSTANT.MESSAGE.NOT_FOUND_BY_ID
         });
     } else {
-        if (!examId || !feedback) {
+        if (!examId || !feedback || !review || !userId) {
             return res.json({ status: CONSTANT.FAIL, message: CONSTANT.MESSAGE.REQUIRED_FIELDS_MISSING });
         } else {
             const feedbackObj = {
@@ -81,7 +79,6 @@ exports.getAllFeedback = (req, res) => {
     const limit = (req.body.limit) ? req.body.limit : 2;     
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
     var skip = (limit * pageCount);
-    console.log("skip",skip)
     var totalRecords = 0;   
     FEEDACK_COLLECTION.countDocuments({ isDeleted: false },{}).lean().exec(function(err, count) {
         totalRecords = count;
@@ -147,10 +144,7 @@ exports.deleteFeedbackById = (req, res) => {
         let myquery = { _id: Id };
         FEEDACK_COLLECTION.deleteOne(
             myquery,
-            // { $set: { isDeleted: true } },
-            // { new: false },
             function (err, result) {
-                console.log(err, result)
                 if (err) {
                     res.send({ status: CONSTANT.ERROR, message: err });
                 } else{
