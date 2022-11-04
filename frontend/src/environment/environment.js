@@ -13,7 +13,13 @@ export const environment = {
     UPDATE_FEEDBACK_BY_ID : "/feedback/updateFeedbackById/",
     GET_ALL_FEEDBACK : "/feedback/getAllFeedback",
     GET_FEEDBACK_BY_ID : "/feedback/getFeedbackById/",
-    DELETE_FEEDBACK_BY_ID : "/feedback/deleteFeedbackById/"
+    DELETE_FEEDBACK_BY_ID : "/feedback/deleteFeedbackById/",
+
+    CREATE_SKILL : 'skills/createSkill',
+    GET_SKILL_BY_ID : 'skills/getSkillById/',
+    UPDATE_SKILL : 'skills/updateSkillById/',
+    GET_ALL_SKILL : 'skills/getAllSkills',
+    DELETE_SKILL_BY_ID : 'skills/deleteSkillById/'
 }
 
 export const BASE_URL = "http://localhost:5000" // localhost

@@ -1,13 +1,31 @@
 import React, { useState } from "react";
+import { Grid } from "@material-ui/core";
 import './Dashboard.css';
+
+// styles
+import useStyles from "./styles";
+
 // components
 import PageTitle from "../../components/PageTitle";
-export default function Dashboard(props) {
+import Widget from "../../components/Widget";
 
+export default function Dashboard(props) {
+  var classes = useStyles();
 
   return (
     <>
-      <PageTitle title="Dashboard" /> 
+      <PageTitle title="Dashboard" button="Latest Reports" />
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
+          <Widget
+            title="Support Requests"
+            upperTitle
+            noBodyPadding
+            bodyClass={classes.tableWidget}
+          >
+          </Widget>
+        </Grid>
+      </Grid>
     </>
   );
 }

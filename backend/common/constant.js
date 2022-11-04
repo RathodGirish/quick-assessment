@@ -23,6 +23,7 @@ module.exports = {
         EMAIL_INVALID: 'Incorrect Email',
         PASSOWRD_INVALID: 'Incorrect Password',
         REQUIRED_FIELDS_MISSING: 'Required fields are missing!',
+        SKILL_EXIST: 'Skill already exists please try with another skill!',
         EMAIL_EXIST: 'Email already exists please try with another email!',
         CATEGORY_RECORD_EXIST: 'You can not delete this Category. Please first delete existing records with this Category.',
         NOT_FOUND_BY_ID: 'not found with ID ',
@@ -54,6 +55,7 @@ module.exports = {
     COLLECTION: {
         USER: 'User ',
         CUSTOMER: 'Customer ',
+        SKILL: 'Skill ',
         FEEDBACK: "Feedback ",
         QUESTION: "Question ",
         EXAM: "EXAM Details ",
