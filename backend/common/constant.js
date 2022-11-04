@@ -55,6 +55,7 @@ module.exports = {
         USER: 'User ',
         CUSTOMER: 'Customer ',
         FEEDBACK: "Feedback ",
+        QUESTION: "Question ",
         EXAM: "EXAM Details ",
     },
     DIR:'./uploaded_attachment',

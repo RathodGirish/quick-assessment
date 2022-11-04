@@ -18,10 +18,8 @@ exports.createQuestion = (req, res) => {
     const tag = req.body.tag
     const requiredTime = req.body.requiredTime
     const answer = req.body.answer
-    const subQuestionType = req.body.subQuestionType
-
-
-    if (!questionStatement || !testType || !level || !topicArea || !questionType || !option || !tag || !requiredTime || !answer || !subQuestionType) {
+    const subQuestionType = req.body.subQuestionType   
+    if (!questionStatement || !testType || !level || !topicArea || !questionType || !requiredTime || !answer || !subQuestionType) {
         res.json({ status: CONSTANT.FAIL, message: CONSTANT.MESSAGE.REQUIRED_FIELDS_MISSING });
     } else {
         const questionObj = {
@@ -37,7 +35,6 @@ exports.createQuestion = (req, res) => {
             subQuestionType: subQuestionType,
             isDeleted: false
         };
-
         QUESTION_COLLECTION.create(questionObj, function (err, result) {
             if (err) {
                 res.json({ status: CONSTANT.FAIL, message: "", err: err });
@@ -56,8 +53,7 @@ exports.createQuestion = (req, res) => {
 TODO: POST
 Topic: update question by id
 */
-exports.updateQuestionById = (req, res) => {
-    console.log(req.body)
+exports.updateQuestionById = (req, res) => {  
     const questionStatement = req.body.questionStatement;
     const testType = req.body.testType;
     const level = req.body.level;
@@ -74,10 +70,7 @@ exports.updateQuestionById = (req, res) => {
             status: CONSTANT.FAIL,
             message: CONSTANT.COLLECTION.QUESTION + CONSTANT.MESSAGE.NOT_FOUND_BY_ID
         });
-    } else {
-        if (!questionStatement || !testType || !level || !topicArea || !questionType || !option || !tag || !requiredTime || !answer || !subQuestionType) {
-            return res.json({ status: CONSTANT.FAIL, message: CONSTANT.MESSAGE.REQUIRED_FIELDS_MISSING });
-        } else {
+    }  else {
             const questionObj = {
                 questionStatement: questionStatement,
                 testType: testType,
@@ -105,7 +98,6 @@ exports.updateQuestionById = (req, res) => {
                 });
             });
         }
-    }
 }
 
 /*
@@ -143,14 +135,13 @@ TODO: GET
 Topic: get all questions
 */
 exports.findAllQuestions = (req, res) => {
-    const limit = (req.body.limit) ? req.body.limit : 2;
+    const limit = (req.body.limit) ? req.body.limit : 5;
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
-    var skip = (limit * pageCount);
-    console.log("skip",skip)
+    var skip = (limit * pageCount);   
     var totalRecords = 0;
     QUESTION_COLLECTION.countDocuments({ isDeleted: false },{}).lean().exec(function(err, count) {
         totalRecords = count;
-        QUESTION_COLLECTION.find({ isDeleted: false },{}).sort({ name: 1 }).skip(skip).limit(limit).lean().exec(function(questionsOperatorError, questions_operators) {
+        QUESTION_COLLECTION.find({ isDeleted: false },{ "_id": 1, "questionStatement": 1, "level" : 1, "questionType" : 1  }).sort({ name: 1 }).skip(skip).limit(limit).lean().exec(function(questionsOperatorError, questions_operators) {
             if (questionsOperatorError || !questions_operators) {
                 res.json({
                     status: CONSTANT.FAIL,
@@ -180,7 +171,7 @@ exports.deleteQuestionById = (req, res) => {
             message: CONSTANT.COLLECTION.QUESTION + CONSTANT.MESSAGE.NOT_FOUND_BY_ID
         });
     } else {
-        QUESTION_COLLECTION.findByIdAndUpdate(Id, { $set: { isDeleted: false } }, { new: true }, function (err, result) {
+        QUESTION_COLLECTION.findByIdAndUpdate(Id, { $set: { isDeleted: true } }, { new: true }, function (err, result) {
             if (err) {
                 res.send({ status: CONSTANT.ERROR, message: err });
             }

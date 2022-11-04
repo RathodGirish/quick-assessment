@@ -1,13 +1,17 @@
-import React, { useState } from "react";
-import './Dashboard.css';
-// components
-import PageTitle from "../../components/PageTitle";
-export default function Dashboard(props) {
+import React from "react";
 
+// components
+import PageTitle from "../../components/PageTitle/PageTitle";
+
+
+
+
+export default function Examdetails() {
+   
 
   return (
     <>
-      <PageTitle title="Dashboard" /> 
+      <PageTitle title="Exam Details" /> 
     </>
   );
 }
@@ -32,21 +36,4 @@ function getRandomData(length, min, max, multiplier = 10, maxDiff = 10) {
 
     return { value: randomValue };
   });
-}
-
-function getMainChartData() {
-  var resultArray = [];
-  var tablet = getRandomData(31, 3500, 6500, 7500, 1000);
-  var desktop = getRandomData(31, 1500, 7500, 7500, 1500);
-  var mobile = getRandomData(31, 1500, 7500, 7500, 1500);
-
-  for (let i = 0; i < tablet.length; i++) {
-    resultArray.push({
-      tablet: tablet[i].value,
-      desktop: desktop[i].value,
-      mobile: mobile[i].value,
-    });
-  }
-
-  return resultArray;
 }

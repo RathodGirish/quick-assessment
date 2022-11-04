@@ -14,8 +14,8 @@ module.exports = (req, res, next) => {
 
     var token = req.body.token || req.query.token || req.headers.authorization;
 
-    if(token) {
-        token = token.split(" ")[1];
+    if(token) {        
+        token = token.toString().split(" ")[1];
         jwt.verify(token, app.get("superSecret"), function(err, decoded){
             if(err){
                 return res.json({ success: 0, message: CONSTANT.AUTHENTICATION_TOKEN_FAIL, err: err });

@@ -9,7 +9,6 @@ Topic: Register User
 */
 
 exports.registerUser = (req, res) => {
-    console.log("req.body")
     const firstName = req.body.firstName
     const lastName = req.body.lastName
     const email = req.body.email
@@ -84,11 +83,9 @@ exports.loginUser = (req,res) =>{
     } else {
             //check user is reister or not
             USER_COLLECTION.findOne({email: email, isDeleted: false})
-            .then(user =>{
-                console.log('user',user)
+            .then(user =>{             
                 if(user){
-                    commonService.decryptPassword(user.password, (decryptedpassword) =>{
-                        console.log(decryptedpassword)
+                    commonService.decryptPassword(user.password, (decryptedpassword) =>{                   
                         if (password == decryptedpassword ){
                           var userDetails = {
                             firstName: user.firstName,
@@ -103,13 +100,12 @@ exports.loginUser = (req,res) =>{
                            // create token for session
                           var token = jwt.sign(userDetails, "testing",{
                             expiresIn: 2592000  // expires in 30 days
-                        });
-                        console.log("token", token)
+                        });                    
                             return res.send({
                             status: CONSTANT.SUCCESS,
                             message: CONSTANT.MESSAGE.LOGIN_SUCESSFULLY,
                             data: userDetails,
-                            token: "Basic " + token
+                            token: "Bearer " + token
                          });
 
 
@@ -146,9 +142,7 @@ TODO: POST
 Topic: update User
 */
 
-exports.updateUserDetailsById = (req, res) => {
-    console.log(req.body)
-    console.log(req.params)
+exports.updateUserDetailsById = (req, res) => {   
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
@@ -197,7 +191,6 @@ exports.getAllUser = (req, res) => {
     const limit = (req.body.limit) ? req.body.limit : 2;     
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
     var skip = (limit * pageCount);
-    console.log("skip",skip)
     var totalRecords = 0;   
     USER_COLLECTION.countDocuments({ isDeleted: false },{}).lean().exec(function(err, count) {
         totalRecords = count;
@@ -265,8 +258,7 @@ exports.deleteUserById = (req, res) => {
             myquery,
             // { $set: { isDeleted: true } },
             // { new: false },
-            function (err, result) {
-                console.log(err, result)
+            function (err, result) {               
                 if (err) {
                     res.send({ status: CONSTANT.ERROR, message: err });
                 } else{
