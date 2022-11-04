@@ -18,7 +18,7 @@ import Sidebar from "../Sidebar";
 import Dashboard from "../../pages/dashboard";
 import User from "../../pages/user/User"
 import Questions from "../../pages/question/Questions";
-import Tables from "../../pages/tables";
+import Skill from "../../pages/skill/Skill";
 import Icons from "../../pages/icons";
 import Charts from "../../pages/charts";
 import Examdetails from "../../pages/examdetails/Examdetails";
@@ -48,7 +48,7 @@ function Layout(props) {
               <Route path="/app/dashboard" component={Dashboard} />
               <Route path="/app/user" component={User} />
               <Route path="/app/questions" component={Questions} />
-              <Route path="/app/skills" component={Tables} />
+              <Route path="/app/skills" component={Skill} />
               <Route path="/app/examdetails" component={Examdetails} />
               <Route path="/app/feedback" component={Feedback} />
               {/* <Route path="/app/notifications" component={Notifications} /> */}

@@ -1,5 +1,4 @@
 const SKILL_COLLECTION = require('../module/skill.module');
-const skill = require('../module/skill.module');
 const commonService = require("../common/common");
 const CONSTANT = require('../common/constant')
 
@@ -9,6 +8,12 @@ Topic:Create new Skill
 */
 exports.createSkills = (req, res) => {
     const name = req.body.name
+    if(!name) {
+        return res.json({
+            status: CONSTANT.FAIL,
+            message: CONSTANT.MESSAGE.REQUIRED_FIELDS_MISSING
+        });
+    } else {
     SKILL_COLLECTION.findOne({ name: name, isDelete: false })
         .then(
             Skill => {
@@ -19,7 +24,7 @@ exports.createSkills = (req, res) => {
                     });
                 } else {
                     let obj = {
-                        name: req.body.name,
+                        name: name,
                         isDelete: false
                     }
                     SKILL_COLLECTION.create(obj, function (err, result) {
@@ -36,14 +41,14 @@ exports.createSkills = (req, res) => {
                 }
             }
         )
+    }
 };
+
 /*
 TODO:POST
 Topic: update Skill by id
 */
 exports.updateSkillById = (req, res) => {
-    console.log(req.body)
-    console.log(req.params)
     const name = req.body.name;
     const Id = req.params.id;
     if (!commonService.isValidObjId(Id)) {
@@ -52,19 +57,37 @@ exports.updateSkillById = (req, res) => {
             message: CONSTANT.COLLECTION.SKILL + CONSTANT.MESSAGE.NOT_FOUND_BY_ID
         });
     } else {
-        const skillObj = {
-            name: name
-        };
-        SKILL_COLLECTION.findByIdAndUpdate(Id, { $set: skillObj }, { new: true }, function (err, result) {
-            if (err) {
-                res.send({ status: CONSTANT.ERROR, message: err });
-            }
-            res.send({
-                status: CONSTANT.ERROR,
-                message: CONSTANT.SKILL + CONSTANT.MESSAGE.IS_UPDATED_SUCCESSFULLY, 
-                data: result
+        if(!name) {
+            return res.json({
+                status: CONSTANT.FAIL,
+                message: CONSTANT.MESSAGE.REQUIRED_FIELDS_MISSING
             });
-        });
+        } else {
+            SKILL_COLLECTION.findOne({ name: name, isDelete: false, _id: { $ne:Id } })
+            .then(
+                Skill => {
+                    if (Skill) {
+                        return res.json({
+                            status: CONSTANT.FAIL,
+                            message: CONSTANT.MESSAGE.SKILL_EXIST
+                        });
+                    } else {
+                        const skillObj = {
+                            name: name
+                        };
+                        SKILL_COLLECTION.findByIdAndUpdate(Id, { $set: skillObj }, { new: true }, function (err, result) {
+                            if (err) {
+                                res.send({ status: CONSTANT.ERROR, message: err });
+                            }
+                            res.send({
+                                status: CONSTANT.ERROR,
+                                message: CONSTANT.COLLECTION.SKILL + CONSTANT.MESSAGE.IS_UPDATED_SUCCESSFULLY, 
+                                data: result
+                            });
+                        });
+                    } })
+
+        }
     }
 }
 
@@ -76,7 +99,6 @@ exports.getAllSkills = function (req, res) {
     const limit = (req.body.limit) ? req.body.limit : 5;
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
     var skip = (limit * pageCount);
-    console.log("skip",skip)
     var totalRecords = 0;
     SKILL_COLLECTION.countDocuments({ isDeleted: false },{}).lean().exec(function(err, count) {
         totalRecords = count;
@@ -89,7 +111,7 @@ exports.getAllSkills = function (req, res) {
             } else {
                 res.json({
                     status: CONSTANT.SUCCESS,
-                    message: { 'message': 'Skill Data found successfully.', 'skill_operators': skill_operators, 'totalRecords': totalRecords }
+                    message: { 'message': CONSTANT.COLLECTION.SKILL+ CONSTANT.MESSAGE.FOUND_SUCCESSFULLY, 'skill_operators': skill_operators, 'totalRecords': totalRecords }
                 });
             }
         })
@@ -139,10 +161,6 @@ exports.getSkillById = (req, res) => {
             message: CONSTANT.COLLECTION.SKILL + CONSTANT.MESSAGE.NOT_FOUND_BY_ID
         })
     } else {
-        let obj = {
-            name: req.body.name,
-            isDelete: false
-        }
         SKILL_COLLECTION.findById(Id)
             .then(skill => {
                 if (skill) {
