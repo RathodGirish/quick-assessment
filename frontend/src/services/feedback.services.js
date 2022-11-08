@@ -25,9 +25,9 @@ function getfeedbbackById(id) {
 
 
 
-function getAllfeedback(){
+function getAllfeedback(params){
     var url = BASE_URL + environment.GET_ALL_FEEDBACK ;
-    return handler.Get(url).then(res => {
+    return handler.Post(url,params).then(res => {
         return res
     })
 }

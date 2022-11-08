@@ -23,6 +23,7 @@ import Icons from "../../pages/icons";
 import Charts from "../../pages/charts";
 import Examdetails from "../../pages/examdetails/Examdetails";
 import Feedback from "../../pages/feedback/Feedback";
+import Profile from "../../components/profile/profile"
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";
@@ -51,6 +52,7 @@ function Layout(props) {
               <Route path="/app/skills" component={Skill} />
               <Route path="/app/examdetails" component={Examdetails} />
               <Route path="/app/feedback" component={Feedback} />
+              <Route path="/app/profile" component={Profile} />
               {/* <Route path="/app/notifications" component={Notifications} /> */}
               <Route
                 exact

@@ -6,19 +6,21 @@ import {
     TableBody,
     TableCell,
 } from "@material-ui/core";
-import axios from 'axios'
+import '../../Questions.css';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Typography } from "../../../../components/Wrappers/Wrappers";
-// components
-import { Button } from "../../../../components/Wrappers/Wrappers";
+// import { Button } from "../../../../components/Wrappers/Wrappers";
+import Button from '@mui/material/Button';
 import { useState } from "react";
 import { useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Create from '@mui/icons-material/Create';
-import swal from 'sweetalert'
-import { deletequestionById, getAllquestion, getquestionById, updatequestionById } from "../../../../services/question.services"
+import { deletequestionById, getAllquestion, getquestionById, updatequestionById, postAllquestion } from "../../../../services/question.services"
+import TablePagination from '@mui/material/TablePagination';
+import { toast } from "react-toastify";
+
 const states = {
     edit: "success",
     pending: "warning",
@@ -58,6 +60,29 @@ export default function TableComponent({ data }) {
     const [requiredTime, setrequiredTime] = useState("")
     const [answer, setanswer] = useState("")
     const [subQuestionType, setsubQuestionType] = useState("")
+    const [page, setPage] = React.useState(1);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [totalrecord, settotalrecord] = React.useState(0);
+
+
+    const handleChangePage = (event, newPage) => {
+        let obj = {
+            limit: rowsPerPage,
+            pageCount: newPage + 1
+        }
+        allquestions(obj);
+        setPage(newPage + 1);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        let obj = {
+            limit: parseInt(event.target.value),
+            pageCount: 0
+        }
+        allquestions(obj);
+        setRowsPerPage(parseInt(event.target.value));
+        setPage(0);
+    };
 
 
     const onTextChange = (e) => {
@@ -89,10 +114,11 @@ export default function TableComponent({ data }) {
 
     // GetAllQuestions //
 
-    const allquestions = async () => {
+    const allquestions = async (obj) => {
         try {
-            const res = await getAllquestion()    
+            const res = await getAllquestion(obj)
             setgetQuestions(res.message.questions_operators)
+            settotalrecord(res.message.totalRecords)
         } catch (err) {
             console.log(err);
         }
@@ -100,15 +126,19 @@ export default function TableComponent({ data }) {
 
 
     useEffect(() => {
-        allquestions();
+        let obj = {
+            limit: rowsPerPage,
+            pageCount: page
+        }
+        allquestions(obj);
     }, []);
 
     // GetQuestionById //
 
     const questionById = async (id) => {
-        await setQuestionId(id)     
+        await setQuestionId(id)
         try {
-            const res = await getquestionById(id)      
+            const res = await getquestionById(id)
             setquestionStatement(res.data.questionStatement)
             settestType(res.data.testType);
             setlevel(res.data.level);
@@ -118,8 +148,8 @@ export default function TableComponent({ data }) {
             setanswer(res.data.answer);
             setsubQuestionType(res.data.subQuestionType);
 
-        } catch (err) { 
-            console.log(err);         
+        } catch (err) {
+            console.log(err);
         }
         handleOpen()
     }
@@ -128,30 +158,42 @@ export default function TableComponent({ data }) {
 
     const updatefeedbackbyId = async () => {
         let obj = {
-            questionStatement:questionStatement,
-            testType:testType,
-            level:level,
-            topicArea:topicArea,
-            questionType:questionType,
-            requiredTime:requiredTime,
-            answer:answer,
-            subQuestionType:subQuestionType
+            questionStatement: questionStatement,
+            testType: testType,
+            level: level,
+            topicArea: topicArea,
+            questionType: questionType,
+            requiredTime: requiredTime,
+            answer: answer,
+            subQuestionType: subQuestionType
         }
-        try {           
-            const res = await updatequestionById(questionId, obj)          
-            await setQuestionId("");
-            allquestions()
-        } catch (err) { 
-            console.log(err);         
+        try {
+            const res = await updatequestionById(questionId, obj).then((data) => {
+                if (data.status === "success") {
+                    toast.success(data.message);
+                    allquestions()
+                } else {
+                    toast.error(data.message);
+                }
+            });
+            await setQuestionId("")
+        } catch (err) {
+            console.log(err);
         }
     }
-    
+
     //  DeletequestionById //
 
     const deletequestion = async (id) => {
         try {
-            const res = await deletequestionById(id)          
-            allquestions();
+            const res = await deletequestionById(id).then((data) =>{
+                if (data.status === "success") {
+                    toast.success(data.message);
+                    allquestions()
+                } else {
+                    toast.error(data.message);
+                }
+            })           
         } catch (err) {
             console.log(err);
         }
@@ -212,7 +254,7 @@ export default function TableComponent({ data }) {
                     >
                         <Box sx={{ ...style, width: "46%" }}>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
-                               Update Question
+                                Update Question
                             </Typography>
                             <Box
                                 component="form"
@@ -291,47 +333,22 @@ export default function TableComponent({ data }) {
                                     />
                                 </div>
                                 <div className="button-position">
-                                    <Button variant="contained" className="submit-button" onClick={(e) => updatefeedbackbyId(e._ids)}>Submit</Button>
+                                    <Button variant="contained" className="submit-button" onClick={(e) => { handleClose(e); updatefeedbackbyId(e._id) }}>Submit</Button>
                                     <Button variant="contained" onClick={handleClose} >Close</Button>
                                 </div>
                             </Box>
                         </Box>
                     </Modal>
-                    {/* <Modal
-                        open={on}
-                        // onClose={handleClose} 
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={{ ...style, width: "46%" }}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Text in a modal
-                            </Typography>                      
-                            <Box
-                                component="form"
-                                sx={{
-                                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                                }}
-                                noValidate
-                                autoComplete="off"
-                            >
-                                <div>
-                                    <TextField
-                                        required
-                                        id="outlined-required"
-                                        label="Question Statement"
-                                        placeholder="Question Statement"                                       
-                                    />                                  
-                                </div>
-                                <div className="button-position">
-                                    <Button variant="contained" className="submit-button" onClick={(e) => deletequestion(id)}>Submit</Button>
-                                    <Button variant="contained" onClick={deleteClose} >Close</Button>
-                                </div>
-                            </Box>
-                        </Box>
-                    </Modal> */}
                 </TableBody>
             </Table>
+            <TablePagination
+                component="div"
+                count={totalrecord}
+                page={page - 1}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </>
     );
 }

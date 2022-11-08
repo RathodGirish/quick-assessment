@@ -19,14 +19,15 @@ function getquestionById(id) {
 
 function updatequestionById(id,data) {
     var url = BASE_URL + environment.UPDATE_QUESTION_BY_ID + id;
-    return handler.Post(url).then(res => {
+    return handler.Post(url,data).then(res => {
         return res
     })
 }
 
-function getAllquestion(){
-    var url = BASE_URL + environment.GET_ALL_QUESTIONS ;
-    return handler.Get(url).then(res => {
+
+function getAllquestion(params){
+    var url = BASE_URL + environment.GET_ALL_QUESTION_LIST ;
+    return handler.Post(url,params).then(res => {
         return res
     })
 }
@@ -42,6 +43,6 @@ export {
     createQuestion,
     getquestionById,
     updatequestionById,
-    getAllquestion,
+    getAllquestion,   
     deletequestionById
 }

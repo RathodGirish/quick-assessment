@@ -11,13 +11,15 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Typography } from "../../components/Wrappers/Wrappers";
 // components
-import { Button } from "../../components/Wrappers/Wrappers";
+// import { Button } from "../../components/Wrappers/Wrappers";
+import Button from '@mui/material/Button';
 import { useState } from "react";
 import { useEffect } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import Create from '@mui/icons-material/Create';
 import { getAllfeedback, deletefeedbackById, updatefeedbackById, getfeedbbackById } from "../../services/feedback.services";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import TablePagination from '@mui/material/TablePagination';
 
 const states = {
     edit: "success",
@@ -51,6 +53,29 @@ export default function TableComponent({ data }) {
     const [feedback, setfeedback] = useState("")
     const [review, setreview] = useState("")
     const [userId, setuserId] = useState("")
+    const [page, setPage] = React.useState(1);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [totalrecord, settotalrecord] = React.useState(0);
+
+    
+    const handleChangePage = (event, newPage) => {
+        let obj = {
+            limit: rowsPerPage,
+            pageCount: newPage + 1
+        }
+        allfeedback(obj);
+        setPage(newPage + 1);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        let obj = {
+            limit: parseInt(event.target.value),
+            pageCount: 0
+        }
+        allfeedback(obj);
+        setRowsPerPage(parseInt(event.target.value));
+        setPage(0);
+    };
 
     const onTextChange = (e) => {
         if (e.target.name === "examId") {
@@ -69,17 +94,22 @@ export default function TableComponent({ data }) {
 
     // GetAllFeedback //
 
-    const allfeedback = async () => {
+    const allfeedback = async (obj) => {
         try {
-            const res = await getAllfeedback()
+            const res = await getAllfeedback(obj)
             setfeedbackdata(res.message.feedback_operators)
+            settotalrecord(res.message.totalRecords)
         } catch (err) {
             console.log(err);
         }
     }
 
     useEffect(() => {
-        allfeedback();
+        let obj = {
+            limit: rowsPerPage,
+            pageCount: page
+        }
+        allfeedback(obj);
     }, []);
 
     // GetFeedbackById //
@@ -239,6 +269,14 @@ export default function TableComponent({ data }) {
                     </Modal>
                 </TableBody>
             </Table>
+            <TablePagination
+                component="div"
+                count={totalrecord}
+                page={page - 1}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </>
     );
 }

@@ -27,6 +27,7 @@ module.exports = {
         EMAIL_EXIST: 'Email already exists please try with another email!',
         CATEGORY_RECORD_EXIST: 'You can not delete this Category. Please first delete existing records with this Category.',
         NOT_FOUND_BY_ID: 'not found with ID ',
+        Data_GET: 'Data not get',
         DATA_FOUND: 'Data found',
         DATA_NOT_FOUND: 'Data not found',
         IS_UPDATED_SUCCESSFULLY: 'is Updated Successfully!!!',
