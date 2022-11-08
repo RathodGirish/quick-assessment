@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 import axios from 'axios';
@@ -10,6 +10,9 @@ import PageTitle from "../../components/PageTitle/PageTitle";
 import Widget from "../../components/Widget/Widget";
 import { CreateSkills } from "../../services/skills.setvice"
 import { Button } from "../../components/Wrappers/Wrappers";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 // css
 import "./style.css";
@@ -19,7 +22,7 @@ import useStyles from "./style.js"
 
 
 // data
-import mock from "../dashboard/mock";
+import mock from "./mock";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -49,23 +52,29 @@ const states = {
 
 export default function Skill() {
   var classes = useStyles();
-  const [open, setOpen] = useState(false);
   const [skillopen, setSkillopen] = useState(false)
-  const [data, setData] = useState([]);
   const [name, setName] = useState("");
   const skillhandleOpen = () => setSkillopen(true)
   const skillhandleClose = () => setSkillopen(false)
- 
+
 
   // create skill API
 
   const createSkill = async () => {
     const obj = { "name": name }
     try {
-      const res = await CreateSkills(obj)
+      const res = await CreateSkills(obj).then((data) => {
+        if (data.status === "success") {
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
+        }
+      })
+
     } catch (e) {
       console.log(e);
     }
+    setName("")
   }
 
   return (
@@ -74,8 +83,8 @@ export default function Skill() {
       <Grid container spacing={4}>
         <Grid item xs={12}>
           <Box className="add-skill-btn">
-            <Button color="primary" margin="right-margin" variant="contained" 
-            onClick={skillhandleOpen}
+            <Button color="primary" margin="right-margin" variant="contained"
+              onClick={skillhandleOpen}
             >
               Add Skill
             </Button>
@@ -108,23 +117,23 @@ export default function Skill() {
                   <Box
                     className="save-Skill-Btn"
                   >
-                    <Button 
-                    color="primary"
-                    variant="contained"
-                    sx={{mt: 2}} 
-                    onClick={() => {
-                      skillhandleClose();
-                      createSkill();}}>
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      sx={{mt: 2}}
+                      onClick={() => {
+                        skillhandleClose();
+                        createSkill();}}>
                       Submit
                     </Button>
-                    <Button 
-                     style={{marginLeft: "10px"}}
-                     color="primary"
-                    variant="contained"
-                    sx={{mt: 2}} 
-                    onClick={() => {
-                      skillhandleClose();
-                      createSkill();}}>
+                    <Button
+                      style={{marginLeft: "10px"}}
+                      color="primary"
+                      variant="contained"
+                      sx={{mt: 2}}
+                      onClick={() => {
+                        skillhandleClose();
+                        createSkill();}}>
                       Cancle
                     </Button>
                   </Box>
@@ -135,11 +144,11 @@ export default function Skill() {
         </Grid>
         <Grid item xs={12}>
           <Widget title="All Skill Tests " upperTitle noBodyPadding>
-            <SkillTable data={mock.table}            
-             />
+            <SkillTable data={mock.table}
+            />
           </Widget>
         </Grid>
-      </Grid>     
-  </>
+      </Grid>
+    </>
   );
 }

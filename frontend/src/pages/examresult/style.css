@@ -1,0 +1,11 @@
+
+.add-exam-result-btn{
+    text-align: right;
+}
+.save-exam-result-Btn{
+    display:"flex";
+    justify-content:"flex-end";
+    align-Items:"flex-end";
+    text-align: right;
+    
+}
