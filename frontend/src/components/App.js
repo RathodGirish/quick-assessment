@@ -11,13 +11,14 @@ import Login from "../pages/login";
 
 // context
 import { useUserState } from "../context/UserContext";
-
+import { ToastContainer, toast } from 'react-toastify';
 export default function App() {
   // global
   var { isAuthenticated } = useUserState();
 
   return (
     <>
+
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -30,6 +31,7 @@ export default function App() {
         pauseOnHover
         theme="light"
       />
+
       <HashRouter>
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/app/dashboard" />} />
@@ -43,6 +45,9 @@ export default function App() {
           <Route component={Error} />
         </Switch>
       </HashRouter>
+
+      
+
     </>
   );
 

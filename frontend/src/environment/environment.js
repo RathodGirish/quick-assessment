@@ -6,6 +6,7 @@ export const environment = {
     UPDATE_QUESTION_BY_ID : "/question/updateQuestionById/",
     GET_QUESTION_BY_ID : "/question/getQuestionById/",
     GET_ALL_QUESTIONS : "/question/findAllQuestions",
+    GET_ALL_QUESTION_LIST : "/question/findAllQuestionList",
     DELETE_QUESTIONS_BY_ID : "/question/deleteQuestionById/",
 
     //Feeddback //

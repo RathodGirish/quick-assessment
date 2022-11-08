@@ -42,9 +42,7 @@ exports.addExamDetails = (req, res) => {
 TODO: POST
 Topic: update ExamDetails ById
 */
-exports.updateexamDetailsById = (req, res) => {
-    console.log(req.body)
-    console.log(req.params)
+exports.updateexamDetailsById = (req, res) => {  
     const topicArea = req.body.topicArea;
     const examTitle = req.body.examTitle;
     const examType = req.body.examType;
@@ -93,7 +91,6 @@ exports.findAllExamdetails = (req, res) => {
     const limit = (req.body.limit) ? req.body.limit : 2;     
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
     var skip = (limit * pageCount);
-    console.log("skip",skip)
     var totalRecords = 0;   
     EXAM_COLLECTION.countDocuments({ isDeleted: false },{}).lean().exec(function(err, count) {
         totalRecords = count;
@@ -161,8 +158,7 @@ exports.deleteExamdetailsById = (req, res) => {
             myquery,
             // { $set: { isDeleted: true } },
             // { new: false },
-            function (err, result) {
-                console.log(err, result)
+            function (err, result) {             
                 if (err) {
                     res.send({ status: CONSTANT.ERROR, message: err });
                 } else{
