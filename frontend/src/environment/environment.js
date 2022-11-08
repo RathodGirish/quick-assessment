@@ -16,11 +16,19 @@ export const environment = {
     GET_FEEDBACK_BY_ID : "/feedback/getFeedbackById/",
     DELETE_FEEDBACK_BY_ID : "/feedback/deleteFeedbackById/",
 
-    CREATE_SKILL : 'skills/createSkill',
-    GET_SKILL_BY_ID : 'skills/getSkillById/',
-    UPDATE_SKILL : 'skills/updateSkillById/',
-    GET_ALL_SKILL : 'skills/getAllSkills',
-    DELETE_SKILL_BY_ID : 'skills/deleteSkillById/'
+    //Skill//
+    CREATE_SKILL : '/skills/createSkill',
+    GET_SKILL_BY_ID : '/skills/getSkillById/',
+    UPDATE_SKILL : '/skills/updateSkillById/',
+    GET_ALL_SKILL : '/skills/getAllSkills',
+    DELETE_SKILL_BY_ID : '/skills/deleteSkillById/',
+
+    //Exam Result//
+    CREATE_EXAM_RESULT: '/examresult/createExamResult',
+    GET_EXAM_RESULTL_BY_ID: '/examresult/getExamResultById/',
+    UPDATE_EXAM_RESULT: '/examresult/updateExamResultById/',
+    GET_ALL_EXAM_RESULT: '/examresult/getAllExamResult',
+    DELETE_EXAM_RESULT_BY_ID: '/examresult/deleteExamResultById/',
 }
 
 export const BASE_URL = "http://localhost:5000" // localhost

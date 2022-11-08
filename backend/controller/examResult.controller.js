@@ -47,10 +47,10 @@ exports.createExamResult = (req, res) => {
                 if (err) {
                     res.json({ status: CONSTANT.FAIL, message: "", err: err });
                 } else {
-                    res.json({ 
-                        status: CONSTANT.SUCCESS, 
-                        message: CONSTANT.COLLECTION.EXAM_RESULT + CONSTANT.MESSAGE.ADDED_SUCCESSFULLY, 
-                        data: result 
+                    res.json({
+                        status: CONSTANT.SUCCESS,
+                        message: CONSTANT.COLLECTION.EXAM_RESULT + CONSTANT.MESSAGE.ADDED_SUCCESSFULLY,
+                        data: result
                     });
                 }
             });
@@ -159,11 +159,10 @@ exports.getAllExamResult = function (req, res) {
     const limit = (req.body.limit) ? req.body.limit : 2;
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
     var skip = (limit * pageCount);
-    console.log("skip",skip)
     var totalRecords = 0;
-    EXAM_RESULT_COLLECTION.countDocuments({ isDeleted: false },{}).lean().exec(function(err, count) {
+    EXAM_RESULT_COLLECTION.countDocuments({ isDeleted: false }, {}).lean().exec(function (err, count) {
         totalRecords = count;
-        EXAM_RESULT_COLLECTION.find({ isDeleted: false },{}).sort({ name: 1 }).skip(skip).limit(limit).lean().exec(function(examResultOperatorError, examResult_operators) {
+        EXAM_RESULT_COLLECTION.find({ isDeleted: false }, {}).sort({ name: 1 }).skip(skip).limit(limit).lean().exec(function (examResultOperatorError, examResult_operators) {
             if (examResultOperatorError || !examResult_operators) {
                 res.json({
                     status: CONSTANT.FAIL,
@@ -172,7 +171,12 @@ exports.getAllExamResult = function (req, res) {
             } else {
                 res.json({
                     status: CONSTANT.SUCCESS,
-                    message: { 'message': 'Exam Result Data found successfully.', 'examResult_operators': examResult_operators, 'totalRecords': totalRecords }
+                    message: {
+                        'message': 'Exam Result Data found successfully.',
+                        'examResult_operators': examResult_operators, 'totalRecords': totalRecords
+                    },
+                    examResult_operators: examResult_operators,
+                    totalRecords: totalRecords
                 });
             }
         })

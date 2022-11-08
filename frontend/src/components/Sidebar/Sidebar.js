@@ -11,6 +11,7 @@ import {
   HelpOutline as FAQIcon,
   ArrowBack as ArrowBackIcon,
   QuestionAnswerOutlined as QuestionAnswerOutlinedIcon,
+  ClassOutlined,
 } from "@material-ui/icons";
 import PeopleOutlineOutlinedIcon from '@material-ui/icons/PeopleOutlineOutlined';
 import { useTheme } from "@material-ui/styles";
@@ -49,6 +50,12 @@ const structure = [
   },
   {
     id: 5,
+    label: "Exam Result",
+    link: "/app/examresult",
+    icon: <ClassOutlined />,
+  },
+  {
+    id: 6,
     label: "FeedBack",
     link: "/app/feedback",
     icon: <UIElementsIcon />,
@@ -66,7 +73,7 @@ function Sidebar({ location }) {
   // local
   var [isPermanent, setPermanent] = useState(true);
 
-  useEffect(function() {
+  useEffect(function () {
     window.addEventListener("resize", handleWindowWidthChange);
     handleWindowWidthChange();
     return function cleanup() {

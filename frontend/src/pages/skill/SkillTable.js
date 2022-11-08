@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import MUIDataTable from "mui-datatables";
 import axios from 'axios';
 
@@ -17,7 +17,12 @@ import Widget from "../../components/Widget/Widget";
 import { GetAllSkill, GetSkillById } from "../../services/skills.setvice";
 import { UpdateSkill } from "../../services/skills.setvice";
 import { DeleteSkill } from "../../services/skills.setvice";
-import { Button } from "../../components/Wrappers/Wrappers";
+import Button from '@mui/material/Button';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
+import TablePagination from '@mui/material/TablePagination';
 
 // css
 import "./style.css";
@@ -27,7 +32,6 @@ import useStyles from "./style.js"
 
 
 // data
-import mock from "../dashboard/mock";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -70,7 +74,31 @@ export default function SkillTable() {
   const [skills, setskills] = useState([]);
 
 
-//Get skill By Id API
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [totalRecord, setTotalRecord] = React.useState(0);
+
+  const handleChangePage = (event, newPage) => {
+    let obj = {
+      limit: rowsPerPage,
+      pageCount: newPage
+    }
+    getAllSkill(obj);
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    let obj = {
+      limit: parseInt(event.target.value),
+      pageCount: 0
+    }
+
+    getAllSkill(obj);
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(0);
+  };
+
+  //Get skill By Id API
   const getSkillData = async (id) => {
     await setSkillId(id)
     try {
@@ -82,144 +110,166 @@ export default function SkillTable() {
     handleOpen()
   }
 
-  useEffect (() => {
-    getAllSkill()
-  },[])
-  
-//Get All Skill API
-const getAllSkill = async () => {
-  try {
-    const res = await GetAllSkill()
-    setskills(res.message.skill_operators)
-  } catch (e) {
-    console.log(e);
+  useEffect(() => {
+    let obj = {
+      limit: rowsPerPage,
+      pageCount: page
+    }
+    getAllSkill(obj);
+  }, []);
+
+  //Get All Skill API
+  const getAllSkill = async (obj) => {
+    try {
+      const res = await GetAllSkill(obj)
+      setskills(res.message.skill_operators)
+      setTotalRecord(res.message.totalRecords)
+    } catch (e) {
+      console.log(e);
+    }
   }
-}
 
+  //Update Skill By Id 
+  const updateSkill = async () => {
+    const obj = { "name": name }
+    try {
+      const res = await UpdateSkill(skillId, obj).then((data) => {
 
-const updateSkill = async () => {
-  const obj = { "name": name }
-  try {
-    const res = await UpdateSkill( skillId, obj)
-    setName(res.data.name)
-    getAllSkill();
-  } catch (err) {
-    console.log(err);
+        if (data.status === "success") {
+          toast.success(data.message);
+        } else {
+          toast.error(data.message);
+        }
+      })
+      await setSkillId("")
+      getAllSkill();
+    } catch (err) {
+      console.log(err);
+    }
   }
-}
-
-const deleteSkill = async (id) => {
-  try {
-    const res = await DeleteSkill(id)
-    getAllSkill();
-  } catch (e) {
-    console.log(e);
+  //Delete Skill By Id
+  const deleteSkill = async (id) => {
+    try {
+      const res = await DeleteSkill(id)
+      getAllSkill();
+    } catch (e) {
+      console.log(e);
+    }
   }
-}
 
 
-return(
+  return (
     <Table className="mb-0">
-    <TableHead>
-      <TableRow>
+      <TableHead>
+        <TableRow>
+          <TableCell className={classes.textCenter} key="#">#</TableCell>
           <TableCell className={classes.textCenter} key="name">Name</TableCell>
           <TableCell className={classes.textCenter} key="action">Action</TableCell>
-     
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {skills && skills.map((e) => (
-        <TableRow>
-          <TableCell className={classes.textCenter + " pl-3 fw-normal"}>{e.name}</TableCell>
-          <TableCell className={classes.textCenter}>
-            <Box>
-            <ButtonGroup>
-            {/* Update Button */}
-              <Button
-                color={states["edit"]}
-                size="small"
-                variant="contained"
-                onClick={() =>{
-                  getSkillData(e._id);
-                }
-                }
-              >
-                <EditIcon/>
-              </Button>
-             
-              {/* Delete Button */}
-              <Button
-              color={states["edit"]}
-              style={{marginLeft: "10px"}}
-                size="small"
-                variant="contained"
-                onClick={() => deleteSkill(e._id)}>
-                  <DeleteIcon />
-                </Button>
-                </ButtonGroup>                         
-            <Box
-                m={1}
-                display="flex"
-                justifyContent="flex-end"
-                alignItems="flex-end"
-              >
-              </Box>
-            </Box>
-          </TableCell>
+
         </TableRow>
-      ))}
-      <Modal
-        open={open}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Update Skill
-          </Typography>
-          <Box
-            component="form"
-            sx={{
-              '& .MuiTextField-root': { m: 1, width: '25ch' },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <div>
-              <TextField
-                required
-                id="outlined-required"
-                label="Skill"
-                placeholder="update skill"
-                onChange={(e) => setName(e.target.value)}
-                name="name"
-                value={name}
-              />
-              <Box className="save-Skill-Btn">
-              <Button 
-               color="primary"
-                variant="contained"
-                sx={{mt: 2}} 
-                onClick={() => {
+      </TableHead>
+      <TableBody>
+        {skills && skills.map((e, i) => (
+          <TableRow key={i}>
+            <TableCell className={classes.textCenter}>{i + 1}</TableCell>
+            <TableCell className={classes.textCenter + " pl-3 fw-normal"}>{e.name}</TableCell>
+            <TableCell className={classes.textCenter}>
+              <Box>
+                <ButtonGroup>
+                  {/* Update Button */}
+                  <Button
+                    color={states["edit"]}
+                    size="small"
+                    variant="contained"
+                    onClick={() =>{
+                      getSkillData(e._id);
+                    }
+                    }
+                  >
+                    <EditIcon/>
+                  </Button>
+
+                  {/* Delete Button */}
+                  <Button
+                    color={states["edit"]}
+                    style={{marginLeft: "10px"}}
+                    size="small"
+                    variant="contained"
+                    onClick={() => deleteSkill(e._id)}>
+                    <DeleteIcon />
+                  </Button>
+                </ButtonGroup>
+                <Box
+                  m={1}
+                  display="flex"
+                  justifyContent="flex-end"
+                  alignItems="flex-end"
+                >
+                </Box>
+              </Box>
+            </TableCell>
+          </TableRow>
+        ))}
+        <Modal
+          open={open}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Update Skill
+            </Typography>
+            <Box
+              component="form"
+              sx={{
+                '& .MuiTextField-root': { m: 1, width: '25ch' },
+              }}
+              noValidate
+              autoComplete="off"
+            >
+              <div>
+                <TextField
+                  required
+                  id="outlined-required"
+                  label="Skill"
+                  placeholder="update skill"
+                  onChange={(e) => setName(e.target.value)}
+                  name="name"
+                  value={name}
+                />
+                <Box className="save-Skill-Btn">
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    sx={{mt: 2}}
+                    onClick={() => {
                       handleClose();
                       updateSkill();}}>
-                  Update
-                </Button>
-                <Button 
-                style={{marginLeft: "10px"}}
-               color="primary"
-                variant="contained"
-                sx={{mt: 2}} 
-                onClick={() => handleClose()}
-                >
-                  Cancle
-                </Button>
-              </Box>
-            </div>
+                    Update
+                  </Button>
+                  <Button
+                    style={{marginLeft: "10px"}}
+                    color="primary"
+                    variant="contained"
+                    sx={{mt: 2}}
+                    onClick={() => handleClose()}
+                  >
+                    Cancle
+                  </Button>
+                </Box>
+              </div>
+            </Box>
           </Box>
-        </Box>
-            </Modal>   
-    </TableBody>
-  </Table>
-)
+        </Modal>
+      </TableBody>
+      <TablePagination
+        component="div"
+        count={totalRecord}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Table>
+  )
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
 
 // components
 import Layout from "./Layout";
@@ -17,6 +18,20 @@ export default function App() {
 
   return (
     <>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
       <HashRouter>
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/app/dashboard" />} />
@@ -30,18 +45,9 @@ export default function App() {
           <Route component={Error} />
         </Switch>
       </HashRouter>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+
+      
+
     </>
   );
 

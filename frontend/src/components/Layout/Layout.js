@@ -19,11 +19,15 @@ import Dashboard from "../../pages/dashboard";
 import User from "../../pages/user/User"
 import Questions from "../../pages/question/Questions";
 import Skill from "../../pages/skill/Skill";
+import Examdetails from "../../pages/examdetails/Examdetails";
+import ExamResult from "../../pages/examresult/ExamResult";
+import Feedback from "../../pages/feedback/Feedback";
+
 import Icons from "../../pages/icons";
 import Charts from "../../pages/charts";
-import Examdetails from "../../pages/examdetails/Examdetails";
-import Feedback from "../../pages/feedback/Feedback";
+
 import Profile from "../../components/profile/profile"
+
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";

@@ -2,6 +2,7 @@ import {connector} from "../common/http-common";
 import {environment as API_URL} from "../../src/environment/environment";
 
 export const CreateSkills = (params) => {
+    console.log(params)
     return connector.Post(API_URL.CREATE_SKILL, params).then((res) => res).catch((error) => error)
 }
 
@@ -19,9 +20,9 @@ export const UpdateSkill =(id,data) => {
     })
 }
 
-export const GetAllSkill =() => {
-    var url =API_URL.GET_ALL_SKILL;
-    return connector.Get(url).then(res => {
+export const GetAllSkill =(params) => {
+    var url = API_URL.GET_ALL_SKILL;
+    return connector.Post(url, params).then(res => {
         return res
     })
 }
