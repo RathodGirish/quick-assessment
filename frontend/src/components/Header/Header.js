@@ -26,6 +26,8 @@ import useStyles from "./styles";
 import { Badge, Typography } from "../Wrappers/Wrappers";
 import Notification from "../Notification/Notification";
 import UserAvatar from "../UserAvatar/UserAvatar";
+import { handler } from "../../services/handler"; 
+import { toast } from "react-toastify";
 
 // context
 import {
@@ -34,6 +36,7 @@ import {
   toggleSidebar,
 } from "../../context/LayoutContext";
 import { useUserDispatch, signOut } from "../../context/UserContext";
+import { Link } from "react-router-dom";
 
 const messages = [
   {
@@ -103,6 +106,11 @@ export default function Header(props) {
   var [isNotificationsUnread, setIsNotificationsUnread] = useState(true);
   var [profileMenu, setProfileMenu] = useState(null);
   var [isSearchOpen, setSearchOpen] = useState(false);
+
+  const onLogout = () => {
+    handler.removeCurrentUserData();
+    toast.success("Logout Successfully");  
+  };
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
@@ -304,7 +312,9 @@ export default function Header(props) {
               classes.headerMenuItem,
             )}
           >
-            <AccountIcon className={classes.profileMenuIcon} /> Profile
+            <Link to="/app/profile" >
+              <AccountIcon className={classes.profileMenuIcon}  /> Profile
+            </Link>
           </MenuItem>
           {/* <MenuItem
             className={classNames(
@@ -326,7 +336,7 @@ export default function Header(props) {
             <Typography
               className={classes.profileMenuLink}
               color="primary"
-              onClick={() => signOut(userDispatch, props.history)}
+              onClick={() => { signOut(userDispatch, props.history); onLogout() }}
             >
               Sign Out
             </Typography>

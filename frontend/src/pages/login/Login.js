@@ -50,6 +50,7 @@ function Login(props) {
         dispatch({ type: "LOGIN_SUCCESS" });
         let session = response.data.token
         localStorage.setItem ("session", session);
+        localStorage.setItem("userData", JSON.stringify(response.data.data))
         props.history.push("/app/dashboard");
       }
     })

@@ -135,7 +135,7 @@ TODO: GET
 Topic: get all questions
 */
 exports.findAllQuestions = (req, res) => {
-    const limit = (req.body.limit) ? req.body.limit : 5;
+    const limit = (req.body.limit) ? req.body.limit : 10;
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
     var skip = (limit * pageCount);   
     var totalRecords = 0;

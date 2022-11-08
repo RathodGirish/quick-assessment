@@ -2,7 +2,7 @@ import axios from "axios";
 import { Constant } from "./common/constant";
 
 export const handler = {
-    Post, Get
+    Post, Get , removeCurrentUserData
 };
 
 function Post (URL, Params) {
@@ -31,4 +31,9 @@ function Get (URL) {
         return response.data
     })
 }
+
+function removeCurrentUserData () {
+    localStorage.removeItem("session");
+    localStorage.removeItem(Constant.JWT_TOKEN);
+  };
 

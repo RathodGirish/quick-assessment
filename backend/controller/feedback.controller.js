@@ -76,7 +76,7 @@ Topic: get AllFeedback
 */
 
 exports.getAllFeedback = (req, res) => {
-    const limit = (req.body.limit) ? req.body.limit : 2;     
+    const limit = (req.body.limit) ? req.body.limit : 10;     
     const pageCount = (req.body.pageCount) ? req.body.pageCount : 0;
     var skip = (limit * pageCount);
     var totalRecords = 0;   
